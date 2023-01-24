@@ -1,0 +1,38 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "lrdb",
+            "request": "attach",
+            "name": "Attach",
+            "host": "localhost",
+            "port": 21110,
+            "sourceRoot": "${workspaceFolder}",
+            "stopOnEntry": false
+        },
+        {
+            "name": "tw-launch-warhammer3",
+            "type": "lua",
+            "request": "launch",
+            "executable": "D:\\Steam\\steamapps\\common\\Total War WARHAMMER III\\Launch.bat",
+            "arguments": "used_mods.txt",
+            "encoding": "UTF-8",
+            "modListFile": "used_mods.txt",
+            "env": {},
+            "sourceFilesPath": "${workspaceFolder}"
+        },
+        {
+            "name": "tw-attach-warhammer3",
+            "type": "lua",
+            "request": "attach",
+            "encoding": "UTF-8",
+            "executable": "D:\\Steam\\steamapps\\common\\Total War WARHAMMER III\\Launch.bat",
+            "modListFile": "used_mods.txt",
+            "sourceFilesPath": "${workspaceFolder}"
+        },
+    ]
+}

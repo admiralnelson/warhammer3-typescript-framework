@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"name": "Virtual TW Source Files",
+			"uri": "twsource:/"
+		}
+	],
+	"settings": {
+		"workbench.colorCustomizations": {
+			"activityBar.background": "#1C330D",
+			"titleBar.activeBackground": "#274812",
+			"titleBar.activeForeground": "#F8FCF5"
+		},
+		"search-online.search-engine": "Bing"
+	}
+}
