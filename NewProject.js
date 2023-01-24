@@ -70,11 +70,6 @@ function CreateTheProject(projectName, directoryPath) {
     if (!fs.existsSync(`${directoryPath}\\.config\\`)) fs.mkdirSync(`${directoryPath}\\.config\\`)
     fs.writeFileSync(`${directoryPath}\\.config\\projectName.txt`, projectName)   
 
-    console.log(`Configuring the project in ${directoryPath}`)
-    execSync(`${directoryPath}\\first_time.bat`, {
-        cwd: directoryPath
-    })
-
     console.log(`Setting up the template with your project name`)
     FromDir(`${directoryPath}\\campaign`, /\.ts$/, (filename) => {
         fs.readFileSync(filename)
@@ -86,6 +81,12 @@ function CreateTheProject(projectName, directoryPath) {
     })
 
     fs.renameSync(`${directoryPath}\\.vscode\\MyProject.code-workspace`, `${directoryPath}\\.vscode\\${projectName}.code-workspace`)
+
+    console.log(`Configuring the project in ${directoryPath}`)
+
+    execSync(`${directoryPath}\\first_time.bat`, {
+        cwd: directoryPath
+    })
 
     console.log("+----------------------------------------------------------------------+")
     console.log(` Project "${projectName}" Created`)
