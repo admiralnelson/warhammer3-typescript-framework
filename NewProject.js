@@ -99,28 +99,28 @@ function ConfigureTheProject(projectName) {
     console.log(`\n\n`)
     console.log(`Configuring "${projectName}"`)
     console.log(`Please input your project directory.`)
-    
-    if (!fs.existsSync(`${global.appRoot}\\project\\`)) fs.mkdirSync(`${global.appRoot}\\project\\`)
-    
+        
     const projectPath = `${global.appRoot}\\project\\${projectName}`
     console.log(`The default path will be ${projectPath}`)
     rl.question(
         "Please type your path, otherwise we will use default path => ", 
         (path) => {
             if(path == "") {
+                if (!fs.existsSync(`${global.appRoot}\\project\\`)) fs.mkdirSync(`${global.appRoot}\\project\\`)
                 CreateTheProject(projectName, projectPath)
                 return
             }
             try {
-                const isPathValid = fs.lstatSync(projectPath).isDirectory()
-                if(isPathValid) CreateTheProject(projectName, path)
+                const isPathValid = fs.lstatSync(path).isDirectory()
+                if(isPathValid) CreateTheProject(projectName, `${path}\\${projectName}`)
                 else {
                     console.log(`Invalid path was entered. That is a file. Please try again.`)
                     ConfigureTheProject(projectName)
                     return
                 }
             } catch (error) {
-                console.log(`Invalid path was entered, it is not found. Please try again.`)
+                console.log(error)
+                console.log(`Invalid path was entered. Please try again.`)
                 ConfigureTheProject(projectName)
                 return
             }            
