@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["esnext"],
+    "moduleResolution": "node",
+    "types": ["lua-types/5.1"],
+    "strict": true,
+    "outDir": "script/",
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+  },
+  "tstl": {
+    "luaTarget": "5.1",
+    "sourceMapTraceback": true,
+    "luaLibImport": "inline",
+  },
+  "include": [
+    "**/__tests__/**/*.ts",  
+    
+    "/campaign/mod/**/*.ts", 
+    "**/campaign/mod/**/*.ts", 
+    "/campaign/mod/**/*.d.ts", 
+
+    "/battle/mod/**/*.ts", 
+    "**/battle/mod/**/*.ts", 
+    "/battle/mod/**/*.d.ts", 
+    "*.ts"]
+}

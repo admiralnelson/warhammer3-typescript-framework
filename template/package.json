@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
+    "@typescript-eslint/parser": "^5.38.0",
+    "eslint": "^8.24.0",
+    "lua-types": "^2.13.0",
+    "typescript": "^4.8.3",
+    "typescript-to-lua": "^1.10.0"
+  },
+  "files": [
+    "dist/**/*.lua",
+    "dist/**/*.d.ts"
+  ]
+}
