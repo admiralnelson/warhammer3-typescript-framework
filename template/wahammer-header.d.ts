@@ -1122,11 +1122,22 @@ This function can also reposition the camera, so it's best used on game creation
      * @returns Dilemma triggered successfully. true is always returned if an intervention is generated.
      */
     trigger_dilemma(factionKey: string, dillemaKey: string, triggerCallback?: VoidCallback): boolean
+   
     /**
      * Replenishes the action points of a specified character.
      * @param characterLookup Character lookup string. For more information, see Character Lookups.
      */
     replenish_action_points(characterLookup: string): void
+
+    /**
+     * Adds all armory items in the specified armory set to the specified character.
+     * @param characterObject The target
+     * @param itemSetKey Key for armory item set to equip, from the armory_item_sets database table.
+     * @param equipDefault 	Equips a default variant of each armory item (if one exists) if the target slot on the character is empty. Armory item variants are defined in the armory_item_variants database table.
+     * @param clearConflictingItem 	Unequips any conflicting items when each item is equipped.
+     * @returns any item was successfully equipped
+     */
+    add_armory_item_set_to_character(characterObject: ICharacterScript, itemSetKey: string, equipDefault: boolean, clearConflictingItem: boolean): boolean
 }
 
 /** context of the callback or conditional checks, get your faction, char, etc. from here */

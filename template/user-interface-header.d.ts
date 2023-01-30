@@ -1,6 +1,7 @@
 /* eslint-disable */
 /// <reference path="wahammer-header.d.ts" />
 
+declare function find_uicomponent(this:void, componentName: string):  IUIComponent | false
 declare function find_uicomponent(this:void, parentComponent?: IUIComponent, ...componentNames: string[]): IUIComponent | false
 declare function uic_pairs(this:void, parentComponent: IUIComponent): Iterable<IUIComponent>
 

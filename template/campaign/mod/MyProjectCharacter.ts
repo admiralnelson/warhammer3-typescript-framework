@@ -299,6 +299,38 @@ namespace ProjectName {
             return this.GetInternalInterface().faction()
         }
 
+        /** gets all anciliaries equipped by this character, it uses CcoCampaignFaction API to queries it */
+        public get AnciliaryKeys(): string[] {
+            const ccoFaction = cco(`CcoCampaignFaction`, this.FactionKey)
+            if(ccoFaction == null) return []
+            const characterListLength = ccoFaction.Call(`CharacterList.Size`) as number
+            for (let i = 0; i < characterListLength; i++) {
+                const characterCqi = ccoFaction.Call(`CharacterList[${i}].CQI`) as number
+                if(characterCqi == this.CqiNo) {
+                    const anciliariesLen = ccoFaction.Call(`CharacterList[${i}].AncillaryList.Size`) as number 
+                    if(anciliariesLen == null) return []                    
+                    const result = []
+                    for (let j = 0; j < anciliariesLen; j++) {
+                        const anciliaryKey = ccoFaction.Call(`CharacterList[${i}].AncillaryList[${j}].AncillaryRecordContext.Key`) as string
+                        if(anciliaryKey != null) result.push(anciliaryKey)
+                    }
+                    return result
+                }                
+            }
+            return []
+        }
+
+        /**
+         * Implement Daniel's Armory system to this character (if your character has a mount, it won't work properly in battle)
+         * @param itemSetKey item set key in armory_item_sets
+         * @param equipDefault Equips a default variant of each armory item (if one exists) if the target slot on the character is empty. Armory item variants are defined in the armory_item_variants database table.
+         * @param clearConflictingItem Unequips any conflicting items when each item is equipped.
+         * @returns any item was successfully equipped
+         */
+        public AddArmoryItemSet(itemSetKey: string, equipDefault: boolean = false, clearConflictingItem: boolean = false): boolean {
+            return cm.add_armory_item_set_to_character(this.GetInternalInterface(), itemSetKey, equipDefault, clearConflictingItem)
+        }
+
         /**
          * (getter) Was the character in the winning alliance in a battle?
          */
