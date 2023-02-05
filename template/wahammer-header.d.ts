@@ -1142,6 +1142,14 @@ This function can also reposition the camera, so it's best used on game creation
 
 /** context of the callback or conditional checks, get your faction, char, etc. from here */
 interface IContext {
+    string?: string
+
+    /**
+     * This member is available for this following events:
+     * 
+     * - ComponentLClickUp
+     */
+    component?: IUIComponentAddress 
     /** 
      * This function is available for this following events:  
      * 
@@ -1264,7 +1272,6 @@ interface IContext {
      * - NewCharacterEnteredRecruitmentPool 
      */
     character_details?(): ICharacterDetailsScript
-    string?: string
      /** This function is available for this following events:  
      * 
      * - CharacterSkillPointAllocated 
@@ -1452,7 +1459,19 @@ type ConstString2String = {
 interface ICore {
     add_listener(listenerName: string, eventName: string, conditionalTest: ConditionalTest | Boolean, callback: Callback, persistsAfterCall :boolean): void
     trigger_event(whatEvent: string, ...varag: any[]): void
+    /**
+     * It is recommended to use `CommonUserInterface.GetRootUI` instead
+     * @returns the root UI
+     */
     get_ui_root(): IUIComponent
+    /**
+     * It is recommended to use `CommonUserInterface.New` instead
+     * Creates a UI component with the supplied name, or retrieves it if it's already been created.
+     * @param name Name to give uicomponent.
+     * @param filePath File path to uicomponent layout, from the working data folder.
+     * @param parent optional, default value=ui_root Parent uicomponent.
+     */
+    get_or_create_component(name: string,  filePath: string, parent?: IUIComponent): LuaMultiReturn<[createdUIComponent: IUIComponent, success: boolean]>    
 }
 
 declare const cm: ICampaignManager

@@ -5,7 +5,9 @@ namespace ProjectName {
     const logger = new Logger("ProjectName")
 
     export const console = {
-        log: (s: string) => logger.Log(s)
+        log: (...s:string[]) => logger.Log(s.join(" ")),
+        warn: (...s: string[]) => logger.LogWarn(s.join(" ")),
+        error: (...s: string[]) => logger.LogError(s.join(" "))
     }
 
     export class localStorage {
