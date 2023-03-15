@@ -1,4 +1,4 @@
-namespace MyProject {
+namespace ProjectName {
 
     /**
      * Displays alert dialog box
