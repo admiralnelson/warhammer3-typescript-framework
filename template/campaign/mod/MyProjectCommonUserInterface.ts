@@ -21,11 +21,11 @@ namespace ProjectName {
 
     export namespace CommonUserInterface {
 
-        const logger = new Logger("MyProject CommonUserInterface")
+        const logger = new Logger("ProjectName CommonUserInterface")
 
         /** Destroy one or more components */
         export function Destroy(...components: IUIComponent[]) {
-            const name = `Destroy_MyProject_${RandomString(5)}`
+            const name = `Destroy_ProjectName_${RandomString(5)}`
             const dummy = New(name, "ui/campaign ui/script_dummy", GetRootUI())
             if(dummy == null) return
 
@@ -83,7 +83,7 @@ namespace ProjectName {
         export class MessageBox implements IPopupDialog {
             private static readonly PropagatePriority = 1000
 
-            readonly identifier = `MessageBox_MyProject_${RandomString(5)}`
+            readonly identifier = `MessageBox_ProjectName_${RandomString(5)}`
             private messageBoxComponent : IUIComponent
             private message: string
             private onAccept: VoidCallback
