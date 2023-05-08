@@ -108,6 +108,56 @@ namespace ProjectName {
         return cm.turn_number()
     }
 
+    /**
+     * Override the battle environment of upcoming battles.
+     * @param fileName 	The file path of the battle environment file. E.g. "weather/battle/wh_day_clear_02.environment_group"
+     */
+    export function SetBattleLightingOverride(fileName: string): void {
+        cm.set_battle_lighting_env_override(fileName)
+    }
+
+    /**
+     * Clears battle ligthing settings.
+     */
+    export function ClearBattleLightingOverride(): void {
+        cm.set_battle_lighting_env_override()
+    }
+
+    export function PerformanceCounterBegin(): number {
+        return os.clock() * 1000
+    }
+
+    export function PerformanceCounterEnd(): number {
+        return os.clock() * 1000
+    }
+
+    /**
+     * Gets difficulty level for local player
+     * @returns current difficulty level, the lower the number, the easier
+     */
+    export function GetCampaignDifficultyLocal(): number {
+        return cm.model().difficulty_level()
+    }
+
+    export function IsMultiplayer(): boolean {
+        return cm.model().is_multiplayer()
+    }
+    
+    /**
+     * Matches string based on a pattern. Subtitute for javascript regex
+     * @param input string to find the patterns
+     * @param pattern lua regex pattern
+     * @returns lua regex capture groups
+     */
+    export function LuaStringMatcher(input: string, pattern: string): string[] {
+        const matcher = string.gmatch(input, pattern)
+        return matcher()
+    }
+
+    export function IsFileExistVFS(filenameWithPath: string) {
+        return common.vfs_exists(filenameWithPath)
+    }
+    
     class TimedCallback {
         private id = 0
         private interval = 0
