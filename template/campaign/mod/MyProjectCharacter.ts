@@ -343,7 +343,7 @@ namespace ProjectName {
         }
 
         /**
-         * Implement Daniel's Armory system to this character (if your character has a mount, it won't work properly in battle)
+         * Implement Daniel's Armory system to this character (if your character has a mount, it won't work properly in battle **(IF the mount type is `war_beast`)**)
          * @param itemSetKey item set key in armory_item_sets
          * @param equipDefault Equips a default variant of each armory item (if one exists) if the target slot on the character is empty. Armory item variants are defined in the armory_item_variants database table.
          * @param clearConflictingItem Unequips any conflicting items when each item is equipped.
@@ -351,6 +351,17 @@ namespace ProjectName {
          */
         public AddArmoryItemSet(itemSetKey: string, equipDefault: boolean = false, clearConflictingItem: boolean = false): boolean {
             return cm.add_armory_item_set_to_character(this.GetInternalInterface(), itemSetKey, equipDefault, clearConflictingItem)
+        }
+
+        /**
+        * Adds an armory item to a character.
+        * @param itemKey Key for armory item to equip, from the `armory_items` database table.
+        * @param equipDefault Equips a default variant of the armory item (if one exists) if the target slot on the character is empty. Armory item variants are defined in the `armory_item_variants` database table.
+        * @param clearConflictingItem Unequips any conflicting items when this item is equipped.
+        * @returns item was successfully equipped
+        */
+        public AddArmoryItem(itemKey: string, equipDefault: boolean = false, clearConflictingItem: boolean = false) {
+            return cm.add_armory_item_to_character(this.GetInternalInterface(), itemKey, equipDefault, clearConflictingItem)
         }
 
         /**
@@ -460,7 +471,7 @@ namespace ProjectName {
          * @returns 
          */
         public IsValid(): boolean {
-            return  this.CqiNo != -1 && cm.get_character_by_cqi(this.CqiNo) != false
+            return !isNaN(this.CqiNo) && this.CqiNo != -1 && cm.get_character_by_cqi(this.CqiNo) != false
         }
 
         /**

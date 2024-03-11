@@ -8,6 +8,7 @@
     "outDir": "script/",
     "noImplicitAny": true,
     "noEmitOnError": true,
+    "strictPropertyInitialization": true,
   },
   "tstl": {
     "luaTarget": "5.1",

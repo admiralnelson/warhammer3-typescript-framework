@@ -647,6 +647,10 @@ interface ICharacterScript extends INullScript, ICharacterDetailsScript, IModelS
 
     bonus_values(): IBonusValuesScript
     post_battle_ancillary_chance(): number
+    /**
+     * returns a characters family member script interface
+     */
+    family_member(): IFamilyMemberScript
 }
 
 interface IPooledResourceManager extends INullScript {
@@ -1244,6 +1248,17 @@ This function can also reposition the camera, so it's best used on game creation
      * @returns any item was successfully equipped
      */
     add_armory_item_set_to_character(characterObject: ICharacterScript, itemSetKey: string, equipDefault: boolean, clearConflictingItem: boolean): boolean
+    
+    /**
+     * Adds an armory item to a character.
+     * @param characterObject Character to add item to.
+     * @param itemKey Key for armory item to equip, from the `armory_items` database table.
+     * @param equipDefault Equips a default variant of the armory item (if one exists) if the target slot on the character is empty. Armory item variants are defined in the `armory_item_variants` database table.
+     * @param clearConflictingItem Unequips any conflicting items when this item is equipped.
+     * @returns item was successfully equipped
+     */
+    add_armory_item_to_character(characterObject: ICharacterScript, itemKey: string, equipDefault?: boolean, clearConflictingItem?: boolean): boolean
+    
     /**
      * Returns true if it's the supplied faction turn. The faction is specified by key.
      * @param factionKey Faction key, from the factions database table.
@@ -1412,6 +1427,10 @@ interface IContext {
      * - TeleportationNetworkMoveStart
      * - TradeNodeConnected
      * - TriggerPostBattleAncillaries
+     * - CharacterArmoryItemEquipped
+     * - CharacterArmoryItemUnequipped
+     * - CharacterArmoryItemEvent
+     * - CharacterArmoryItemUnlocked
      */
     character?(): ICharacterScript
     /** This function is available for this following events:  
@@ -1588,6 +1607,23 @@ interface IContext {
      *  - TriggerPostBattleAncillaries
      */
     has_stolen_ancillary?(): boolean
+
+    /**
+     *   This function is available for this following events:  
+     * 
+     *  - CharacterArmoryItemUnlocked
+     *  - CharacterArmoryItemUnequipped
+     *  - CharacterArmoryItemEvent
+     *  - CharacterArmoryItemEquipped
+     */
+    item_variant_key?(): string
+
+    /**
+     *   This function is available for this following events:  
+     * 
+     *  - CharacterAncillaryGained
+     */
+    ancillary?(): string
 }
 
 interface IRealTimer {
