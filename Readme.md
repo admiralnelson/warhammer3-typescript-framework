@@ -18,8 +18,10 @@ This is taken from https://typescripttolua.github.io/docs/caveats doc
 | ------------------- | :-----: | :-----: | :-----: | :-----: | :----: |
 | [Missing features]  |   ❌    |   ❌    |   ❌    |   ❌    |   ❌   |
 | [Bitwise operators] |   ❌    |   ❌    |   ✔️    |   ✔️    |   ✔️   |
-| [`continue`]        |   ❌    |   ❌    |   ✔️    |   ✔️    |   ✔️   |
+| [`continue`]        |   ❌    |   ✔️*   |   ✔️    |   ✔️    |   ✔️   |
 | (everything else)   |   ✔️    |   ✔️    |   ✔️    |   ✔️    |   ✔️   |
+
+*thru workaround in compile time
 
 [missing features]: https://github.com/TypeScriptToLua/TypeScriptToLua/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%22missing+feature%22
 [bitwise operators]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_Operators
