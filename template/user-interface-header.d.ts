@@ -68,6 +68,16 @@ interface IUIComponent {
      * Sets the state of the uicomponent to the specified state name.
      * @param stateName  state name
      */
+    
+    /**
+     * Sets the text on all available states of the uicomponent to the supplied text.  
+     * Localised text must be specified  
+     * common.get_localised_string can be used to look this up from anywhere in the database.
+     * @param localisedText Localised text.
+     * @param textSource source of text in format of a stringtable key (tablename_recordname_key)
+     */
+    SetText(localisedText: string, textSource?: string): void
+
     SetState(stateName: string): boolean
     /** Returns the name of the current state of the uicomponent. */
     CurrentState(): string
@@ -77,6 +87,8 @@ interface IUIComponent {
     PropagateVisibility(visible: boolean): void
     /** Gets the context object (cco lua type) for the supplied type that is stored on the component */
     GetContextObject(contextTypeId: string): IComponentContextObject | null
+    /** Gets the context object Id from context type Id */
+    GetContextObjectId(contextTypeId: string): string | null
     /** Sets the docking point of the uicomponent to the specified value. 
      * @param dockPoint dock point
     */
@@ -201,4 +213,22 @@ interface IUIComponent {
      * Returns whether or not the mouse cursor is currently over this uicomponent or any of its children.
      */
     IsMouseOverChildren(): boolean
+
+    /**
+     * Returns the number of immediate children this uicomponent has.  
+     * These children can be individually retrieved by using uicomponent.Find and supplying a numeric value.  
+     */
+    ChildCount(): number
+
+    /**
+     * Finds and returns a child of this uicomponent by string name or by numeric index.  
+     *  - If a numeric index is supplied, the immediate child uicomponent corresponding to this number is returned.  
+     *  - If a string name is supplied, a recursive search is made through all children/descendants of this uicomponent. The first that is found with a matching name is returned.  
+     *  - If the search target was not found then nil is returned.   
+     *  - If it was found then it is returned as a component address, which must be cast to a uicomponent script object using the UIComponent function.   
+     * The find_uicomponent function provided by the script libraries does this automatically, so it's recommended to use that function in place of this function.
+     * @param index 
+     * @param assertOnFail 
+     */
+    Find(index: number|string, assertOnFail?: boolean): IUIComponentAddress | null
 }
