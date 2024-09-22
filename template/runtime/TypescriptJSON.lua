@@ -113,6 +113,9 @@ local function encode_number(val)
   return string.format("%.14g", val)
 end
 
+local function function_to_string  (f) 
+  return "\""..tostring(f).."\""
+end
 
 local type_func_map = {
   [ "nil"     ] = encode_nil,
@@ -120,7 +123,7 @@ local type_func_map = {
   [ "string"  ] = encode_string,
   [ "number"  ] = encode_number,
   [ "boolean" ] = tostring,
-  [ "function" ] = tostring,
+  [ "function" ] = function_to_string,
 }
 
 
