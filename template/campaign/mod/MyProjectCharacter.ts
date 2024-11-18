@@ -13,7 +13,8 @@ namespace ProjectName {
         setAsFactionLeader?: boolean
         regionKey?: string
         suppressLog?: boolean
-        onFailed?: VoidCallback
+        onFailed?: VoidCallback,
+        onSuccess?: (leaderCqi: number) => void
     }
     type CallbackLordCreated = { 
         (theLordHimself: Lord, reason?: "CreateFromKey" | "WrappingExistingObject"): void
@@ -131,8 +132,8 @@ namespace ProjectName {
                 }
 
                 if(options.regionKey == null) {
-                    if(!options.suppressLog) CharacterLogger.LogError(`can't spawn lord/agent, options.factionKey was null`)
-                    throw(`can't spawn lord/agent, options.factionKey was null`)
+                    if(!options.suppressLog) CharacterLogger.LogError(`can't spawn lord/agent, options.regionKey was null`)
+                    throw(`can't spawn lord/agent, options.regionKey was null`)
                 }
                 if(options.factionKey == null) {
                     if(!options.suppressLog) CharacterLogger.LogError(`can't spawn lord/agent, options.factionKey was null`)
@@ -192,9 +193,12 @@ namespace ProjectName {
                     "", 
                     options.familyName ?? "", 
                     "", 
-                    options.setAsFactionLeader ?? false, 
-                    (cqi) => { CharacterLogger.Log(`spawned lord ${cqi}`) }, 
-                    false
+                    options.setAsFactionLeader ?? false,
+                    (cqi) => { 
+                        CharacterLogger.Log(`spawned lord ${cqi}`) 
+                        if(options.onSuccess) options.onSuccess(cqi)
+                    }, 
+                    false,
                 )
                 return
             }
@@ -365,6 +369,33 @@ namespace ProjectName {
         }
 
         /**
+        * Removes an armory item to a character.
+        * @param itemKey Key for armory item to equip, from the `armory_items` database table.
+        * @returns item was successfully removed
+        */
+        public RemoveArmoryItem(itemKey: string): boolean {
+            return cm.remove_armory_item_from_character(this.GetInternalInterface(), itemKey)
+        }
+
+        /**
+         * Returns the active slot state for the specified armory item variant on the specified character. If no slot state value can be found then "INVALID" is returned.
+         * @param itemVariantKey Variant of armory item to query, from the armory_item_variants database table.
+         * @returns 
+         */
+        public GetArmorySlotState(itemVariantKey: string): string {
+            return cm.get_active_armory_item_variant_slot_state_for_character(this.GetInternalInterface(), itemVariantKey)
+        }
+
+        /**
+         * Equips a specific variant of an armory item on the specified character.
+         * @param itemVariant Variant of armory item to equip, from the armory_item_variants database table.
+         * @returns 
+         */
+        public EquipArmouryVariant(itemVariant: string): boolean {
+            return cm.equip_armory_item_variant_on_character(this.GetInternalInterface(), itemVariant, true)
+        }
+
+        /**
          * (getter) Was the character in the winning alliance in a battle?
          */
         public get IsRecentlyWonBattle(): boolean {
@@ -511,6 +542,15 @@ namespace ProjectName {
         }
 
         /**
+         * Make this characther immortal
+         * @param yes 
+         */
+        public SetImmortality(yes: boolean): void {
+            const cqiNo = this.CqiNo
+            cm.suppress_immortality(cqiNo, !yes)
+        }
+
+        /**
          * Gets trait point (the points thing that is next to skill node in character skill tree)
          * @param traitKey trait key
          * @returns 
@@ -530,9 +570,18 @@ namespace ProjectName {
         /**
          * Kills this character. WARNING: this can render methods of this object to be invalid!
          * @param destroyTroop destroy the troop too? (for general/lord only)
+         * @param permanentlyKillAsFactionLeader set this to true to erase the lord (AS FACTION LEADER) from its family member (see mixu LL script)
          */
-        public Kill(destroyTroop: boolean = false) {
-            cm.kill_character_and_commanded_unit(cm.char_lookup_str(this.GetInternalInterface()), destroyTroop)
+        public Kill(destroyTroop: boolean = false, permanentlyKillAsFactionLeader = false) {
+            if(!permanentlyKillAsFactionLeader)
+                cm.kill_character_and_commanded_unit(cm.char_lookup_str(this.GetInternalInterface()), destroyTroop)
+            else {
+                const familyMemberCqi = this.GetInternalInterface()
+                                            .family_member()
+                                            .command_queue_index()
+                cm.suppress_immortality(familyMemberCqi, true)
+                cm.kill_character_and_commanded_unit("family_member_cqi:" + (familyMemberCqi).toString(), destroyTroop)
+            }
         }
 
         /**
@@ -592,6 +641,7 @@ namespace ProjectName {
         factionKey?: string,
         regionKey?: string,
         lordCreatedCallback?: CallbackLordCreated,
+        setAsFactionLeader?: boolean
         suppressLog?: boolean,
         onFailed?: VoidCallback
     }
@@ -618,24 +668,7 @@ namespace ProjectName {
          */
         constructor(options?: LordCreationOptions) {
             if(options == null) return
-            if(options.agentKey && options.characterObject == null) {
-                core.add_listener(
-                    `create lord ${options.agentKey} ${RandomString()}`,
-                    "CharacterRecruited",
-                    (context) => {
-                        const theChar = context.character ? context.character() : null
-                        if(theChar == null) return false
-    
-                        return theChar.character_subtype_key() == options.agentKey
-                    },
-                    (context) => {
-                        const theChar = context.character ? context.character() : null
-                        if(theChar == null) return
-                        if(this.lordCreatedCallback) this.lordCreatedCallback(this, "CreateFromKey")
-                    }, 
-                    false
-                )
-            }
+
             if(options.characterObject) {
                 super({})
                 this.CommanQueueNumberID = options.characterObject.command_queue_index()
@@ -669,9 +702,18 @@ namespace ProjectName {
                     factionKey: options.factionKey,
                     regionKey: options.regionKey,
                     agentSubtypeKey: options.agentKey,
-                    onFailed: options.onFailed
+                    setAsFactionLeader: options.setAsFactionLeader,
+                    onFailed: options.onFailed,
+                    onSuccess: (leaderCqi) => {
+                        const lordHimself = TryCastCharacterToLord(TrustMeThisCast(FindCharacter(leaderCqi)))
+                        if(options.lordCreatedCallback) options.lordCreatedCallback(TrustMeThisCast(lordHimself), "CreateFromKey")
+                    }
                 })
+
+                return
             }
+
+            
             this.lordCreatedCallback = options.lordCreatedCallback
             if(options.characterObject) {
                 if(this.lordCreatedCallback) this.lordCreatedCallback(this, "WrappingExistingObject")

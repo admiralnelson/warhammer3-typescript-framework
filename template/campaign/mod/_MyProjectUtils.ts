@@ -11,6 +11,7 @@ namespace ProjectName {
     }
 
     export class localStorage {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         public static setItem(key: string, value: any) : void {
             cm.set_saved_value(key, value)
         }
@@ -292,5 +293,16 @@ namespace ProjectName {
      */
     export function clearInterval(id: number): boolean {
         return TimerManager.Instance.Kill(id)
+    }
+
+    
+    /**
+     * DO NOT USE THIS FUNCTION UNLESS YOU'RE 100% THE OBJECT IS COMPATIBLE AND CASTABLE TO THE TARGET CLASS
+     * Overusing this defeats the point of using Typescript.
+     * @param x Object
+     * @returns 
+     */
+    export function TrustMeThisCast<T>(x: unknown): T {
+        return x as T;
     }
 }
