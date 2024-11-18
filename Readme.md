@@ -10,6 +10,7 @@ You can periodically pull this repo to update the project templates.
 API provided in Typescript is not yet fully complete, but it does capable to make mods like these:
  - Bretonnia Generic Lord Pack (20 variants) https://steamcommunity.com/sharedfiles/filedetails/?id=2867514081
  - Knights of The Round Belly: Remastered https://steamcommunity.com/sharedfiles/filedetails/?id=2921177184
+ - The Royal Armoury of Bretonnia: REINFORCED EDITION https://steamcommunity.com/sharedfiles/filedetails/?id=3367799016
 
 This is taken from https://typescripttolua.github.io/docs/caveats doc
 ## Feature support
