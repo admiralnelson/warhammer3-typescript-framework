@@ -38,13 +38,13 @@ namespace ProjectName {
                 const factions = theWorld.faction_list()
                 for (let i = 0; i < factions.num_items(); i++) {
                     const theFaction = factions.item_at(i)
-                    Faction.CachedFactions.push(new Faction(theFaction))
+                    Faction.CachedFactions.push(new Faction(theFaction.name()))
                 }
             }
             return Faction.CachedFactions
         }
 
-        private factionInterface: IFactionScript
+        private factionKey: string = ""
 
         /**
          * Wraps IFactionScript object into Faction object so you can manipulate and query this faction with OOP style (no need to touch cm API again)  
@@ -52,12 +52,17 @@ namespace ProjectName {
          * @param faction IFactionScript
          * @throws execption if the user puts invalid IFactionScript object (i.e if it's INullScript)
          */
-        private constructor(faction: IFactionScript) {
-            this.factionInterface = faction
-            if(this.factionInterface.is_null_interface()) {
-                FactionLogger.LogError(`the faction interface is null interface!`)
-                throw(`the faction interface is null interface!`)
+        private constructor(faction: IFactionScript | string) {
+            if(typeof(faction) == "string") {
+                this.factionKey = faction
+            } else {
+                if(faction.is_null_interface()) {
+                    FactionLogger.LogError(`the faction interface is null interface!`)
+                    throw(`the faction interface is null interface!`)
+                }
+                this.factionKey = faction.name()
             }
+
         }
 
         /**
@@ -164,12 +169,47 @@ namespace ProjectName {
         }
 
         /**
+         * Put a lord into the spawn pool
+         * @param agentSubtypeKey subtype agent key defined in the database
+         */
+        public AddLordToPool(agentSubtypeKey: string): void {
+            cm.spawn_character_to_pool(this.FactionKey, "", "", "", "", 18, true, "general", agentSubtypeKey, false, "")
+        }
+
+        /**
          * Trigger a mission from this faction
          * @param missionKey Mission key from Mission tables
          * @param fireImmediately start the mission immediately after this method is fired
          */
         public TriggerMission(missionKey: string, fireImmediately: boolean = true): void {
             cm.trigger_mission(this.FactionKey, missionKey, fireImmediately)
+        }
+
+        /**
+         * Add money to faction
+         * @param someMoney Money to be added
+         */
+        public AddMoney(someMoney: number): void {
+            cm.treasury_mod(this.FactionKey, someMoney)
+        }
+        
+        /**
+         * Get pooled resource associated with the faction. I.E measuring the amount of chivalry
+         * @returns Returns NAN if resourceKey is invalid!
+         * @param resourceKey 
+         */
+        GetPooledResource(resourceKey: string): number {
+            const faction = this.GetFactionInterface()
+            const query   = faction.pooled_resource_manager()
+                                   .resource(resourceKey)
+            const isQueryValid = query.is_null_interface()
+            
+            if(!isQueryValid) {
+                console.error("Invalid resource key id: " + resourceKey)
+                return Number.NaN
+            }
+
+            return query.value()
         }
 
         /**(Getter) gets all lords and champions, wrap them in generic Character class */
@@ -236,6 +276,10 @@ namespace ProjectName {
         */
         public IsEqual(otherFaction: Faction) {
             return this.FactionKey == otherFaction.FactionKey
+        }
+
+        public get factionInterface() : IFactionScript {
+            return cm.get_faction(this.factionKey)
         }
     }
 }
