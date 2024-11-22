@@ -202,7 +202,7 @@ namespace ProjectName {
             const faction = this.GetFactionInterface()
             const query   = faction.pooled_resource_manager()
                                    .resource(resourceKey)
-            const isQueryValid = query.is_null_interface()
+            const isQueryValid = !query.is_null_interface()
             
             if(!isQueryValid) {
                 console.error("Invalid resource key id: " + resourceKey)
