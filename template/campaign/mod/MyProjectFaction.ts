@@ -218,7 +218,10 @@ namespace ProjectName {
             const characters = this.factionInterface.character_list()
             for (let i = 0; i < characters.num_items(); i++) {
                 const theCharacter = characters.item_at(i)
-                result.push(new Character({characterObject: theCharacter}))
+                if(cm.char_is_general_with_army(theCharacter))
+                    result.push(new Character({characterObject: theCharacter}))
+                else if(cm.char_is_agent(theCharacter))
+                    result.push(new Character({characterObject: theCharacter}))
             }
             return result
         }
@@ -268,6 +271,21 @@ namespace ProjectName {
         public toString(): string {
             return this.FactionKey
         }
+
+        /** (getter) returns true if this faction is currently on its turn */
+        public get IsCurrentTurn(): boolean {
+            return  cm.is_factions_turn_by_key(this.FactionKey)
+        }
+
+        /** (Getter) returns true if local human faction (the human who currently control his faction on turn) */
+        public get IsHumanTurn() : boolean {
+            return this.IsHuman && this.IsCurrentTurn
+        }
+
+        public get CQI(): number {
+            return this.factionInterface.command_queue_index()
+        }
+
 
         /**
          * Rather than doing this factionA == factionB (although both instances have the same reference, the objects wrapper are still different), use this method to check if both object is equal
