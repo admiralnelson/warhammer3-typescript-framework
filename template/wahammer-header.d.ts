@@ -20,11 +20,11 @@ declare function out(s: string): void
 
 /** JSON interface: campaign\mod\JSON.lua */
 interface JSON {
-    stringify(this: void, o: any): string;
+    stringify(this: void, o: any): string
     /** 
     * @throws {Error} generic lua error, containing a message
     */
-    parse(this: void, s: string): any;
+    parse(this: void, s: string): any
 }
 
 interface INullScript {
@@ -165,7 +165,77 @@ interface ISlotListScript extends IListScript {
 
 }
 
+interface IMercenaryPoolScript extends INullScript {
+
+}
+
+
+
 interface IProvinceScript extends INullScript {
+    /**
+     * Checks if the interface is null.
+     * 
+     * @returns {boolean} True if the interface is null, otherwise false.
+     */
+    is_null_interface(): boolean
+
+    /**
+     * Gets the key of the province.
+     * 
+     * @returns {string} The key of the province.
+     */
+    key(): string
+
+    /**
+     * Gets the faction provinces manager list.
+     * 
+     * @returns {IFactionProvinceManagerList} The faction provinces manager list.
+     */
+    faction_provinces(): IFactionProvinceManagerList
+
+    /**
+     * Gets the faction province manager for a specific faction.
+     * 
+     * @param {IFactionScript} faction - The faction to get the province manager for.
+     * @returns {IFactionProvinceManager} The faction province manager for the specified faction.
+     */
+    faction_province_for_faction(faction: IFactionScript): IFactionProvinceManager
+
+    /**
+     * Gets the capital region of the province.
+     * 
+     * @returns {IRegionScript} The capital region of the province.
+     */
+    capital_region(): IRegionScript
+
+    /**
+     * Gets the list of regions in the province.
+     * 
+     * @returns {IRegionListScript} The list of regions in the province.
+     */
+    regions(): IRegionListScript
+
+    /**
+     * Gets the list of adjacent provinces.
+     * 
+     * @returns {IProvinceListScript} The list of adjacent provinces.
+     */
+    adjacent_provinces(): IProvinceListScript
+
+    /**
+     * Gets the pooled resource manager for the province.
+     * 
+     * @returns {IPooledResourceManagerScript} The pooled resource manager for the province.
+     */
+    pooled_resource_manager(): IPooledResourceManagerScript
+
+    /**
+     * Gets the mercenary pool for the province.
+     * 
+     * @returns {IMercenaryPoolScript} The mercenary pool for the province.
+     */
+    mercenary_pool(): IMercenaryPoolScript
+
 
 }
 
@@ -407,6 +477,10 @@ interface IRegionScript extends INullScript {
     pooled_resource_manager(): IPooledResourceManagerScript
     bonus_values(): IBonusValuesScript
     
+    /**
+     * Returns the list of characters in the region
+     */
+    characters_in_region(): ICharacterListScript
 }
 
 interface ISeaRegionScript extends INullScript {
@@ -775,6 +849,72 @@ interface IFactionProvinceScript extends INullScript {
     //TODO
 }
 
+interface IProvinceScript extends INullScript {
+    /**
+     * Checks if the interface is null.
+     * 
+     * @returns {boolean} True if the interface is null, otherwise false.
+     */
+    is_null_interface(): boolean
+
+    /**
+     * Gets the key of the province.
+     * 
+     * @returns {string} The key of the province.
+     */
+    key(): string
+
+    /**
+     * Gets the faction provinces manager list.
+     * 
+     * @returns {IFactionProvinceManagerList} The faction provinces manager list.
+     */
+    faction_provinces(): IFactionProvinceManagerList
+
+    /**
+     * Gets the faction province manager for a specific faction.
+     * 
+     * @param {IFactionScript} faction - The faction to get the province manager for.
+     * @returns {IFactionProvinceManager} The faction province manager for the specified faction.
+     */
+    faction_province_for_faction(faction: IFactionScript): IFactionProvinceManager
+
+    /**
+     * Gets the capital region of the province.
+     * 
+     * @returns {IRegionScript} The capital region of the province.
+     */
+    capital_region(): IRegionScript
+
+    /**
+     * Gets the list of regions in the province.
+     * 
+     * @returns {IRegionListScript} The list of regions in the province.
+     */
+    regions(): IRegionListScript
+
+    /**
+     * Gets the list of adjacent provinces.
+     * 
+     * @returns {IProvinceListScript} The list of adjacent provinces.
+     */
+    adjacent_provinces(): IProvinceListScript
+
+    /**
+     * Gets the pooled resource manager for the province.
+     * 
+     * @returns {IPooledResourceManagerScript} The pooled resource manager for the province.
+     */
+    pooled_resource_manager(): IPooledResourceManagerScript
+
+    /**
+     * Gets the mercenary pool for the province.
+     * 
+     * @returns {IMercenaryPoolScript} The mercenary pool for the province.
+     */
+    mercenary_pool(): IMercenaryPoolScript
+}
+
 interface IPooledResourceScript extends INullScript {
 
     /** 
@@ -859,7 +999,7 @@ interface IPooledResourceListScript extends IListScript {
      * @param index - A positive integer within the range [0, num_items - 1]
      * @returns The pooled resource interface at the specified index
      */
-    item_at(index: number): IPooledResourceScript;
+    item_at(index: number): IPooledResourceScript
 }
 
 interface IPooledResourceFactorListScript extends IListScript {
@@ -869,7 +1009,7 @@ interface IPooledResourceFactorListScript extends IListScript {
      * @param index - A positive integer within the range [0, num_items - 1]
      * @returns The pooled resource interface at the specified index
      */
-    item_at(index: number): IPooledResourceScript;
+    item_at(index: number): IPooledResourceScript
 }
 
 interface IPooledResourceFactorScript extends INullScript {
@@ -877,36 +1017,36 @@ interface IPooledResourceFactorScript extends INullScript {
      * Pooled resource factor record key of this factor 
      * @returns The factor key as a string
      */
-    key(): string;
+    key(): string
 
     /** 
      * Total value of this factor at the current time, potentially negative 
      * @returns The factor value as an int32
      */
-    value(): number;
+    value(): number
 
     /** 
      * Percentage of the total capacity within min and max bounds 
      * @returns The capacity percentage as an int32
      */
-    percentage_of_capacity(): number;
+    percentage_of_capacity(): number
 
     /** 
      * Minimum value of this factor, including modifications from effects 
      * @returns Minimum value as an int32
      */
-    minimum_value(): number;
+    minimum_value(): number
 
     /** 
      * Maximum value of this factor, including modifications from effects 
      * @returns Maximum value as an int32
      */
-    maximum_value(): number;
+    maximum_value(): number
 }
 
 interface IPooledResourceManagerScript extends INullScript {
     /** Is this the null script interface */
-    is_null_interface(): boolean;
+    is_null_interface(): boolean
 
     /** 
      * Test whether the resources contained in this manager could afford to pay the specified resource cost 
@@ -919,14 +1059,14 @@ interface IPooledResourceManagerScript extends INullScript {
      * Scope of this pooled resource manager 
      * @returns The scope as a string
      */
-    scope(): string;
+    scope(): string
 
     /** 
      * Is the pooled resource manager associated with a faction?
      * True if associated with faction, character, military force, or region
      * @returns boolean
      */
-    has_owning_faction(): boolean;
+    has_owning_faction(): boolean
 
     /** 
      * Faction that owns this pooled resource manager, if any 
@@ -938,7 +1078,7 @@ interface IPooledResourceManagerScript extends INullScript {
      * Is the pooled resource manager associated with a region? 
      * @returns boolean
      */
-    has_region(): boolean;
+    has_region(): boolean
 
     /** 
      * Gets the region associated with this pooled resource manager, if any 
@@ -950,7 +1090,7 @@ interface IPooledResourceManagerScript extends INullScript {
      * Is the pooled resource manager associated with a character? 
      * @returns boolean
      */
-    has_character(): boolean;
+    has_character(): boolean
 
     /** 
      * Gets the character associated with this pooled resource manager, if any 
@@ -962,7 +1102,7 @@ interface IPooledResourceManagerScript extends INullScript {
      * Is the pooled resource manager associated with a military force? 
      * @returns boolean
      */
-    has_military_force(): boolean;
+    has_military_force(): boolean
 
     /** 
      * Gets the military force associated with this pooled resource manager, if any 
@@ -974,7 +1114,7 @@ interface IPooledResourceManagerScript extends INullScript {
      * Is the pooled resource manager associated with a province? 
      * @returns boolean
      */
-    has_province(): boolean;
+    has_province(): boolean
 
     /** 
      * Gets the province associated with this pooled resource manager, if any 
@@ -986,7 +1126,7 @@ interface IPooledResourceManagerScript extends INullScript {
      * Is the pooled resource manager associated with a faction province manager? 
      * @returns boolean
      */
-    has_faction_province(): boolean;
+    has_faction_province(): boolean
 
     /** 
      * Gets the faction province associated with this pooled resource manager, if any 
@@ -1551,6 +1691,32 @@ This function can also reposition the camera, so it's best used on game creation
      * Give some money to the faction
      */
     treasury_mod(factionKey: string, amount: number): void
+
+    /**
+     * Get region by key or script interface
+     * If the region is not found, it will return false
+     */
+    get_region(region: string | IRegionScript): IRegionScript | false
+
+    /**
+     * Get province by key or script interface
+     * If the province is not found, it will return false
+     */
+    get_province(province: string | IProvinceScript): IProvinceScript | false
+
+    /**
+     * Is the region owned by the faction?
+     * @param regionName 
+     * @param factionName 
+     */
+    is_region_owned_by_faction(regionName: string, factionName: string): boolean
+
+    /**
+     * Get the owner of the province  
+     * Returns null if the province is not owned by any faction or multiple factions
+     * @param province 
+     */
+    get_owner_of_province(province: IProvinceScript): IFactionScript | null
 }
 
 /** context of the callback or conditional checks, get your faction, char, etc. from here */
@@ -1887,6 +2053,7 @@ interface IContext {
      *   This function is available for this following events:  
      * 
      *  - CharacterAncillaryGained
+     *  - FactionGainedAncillary
      */
     ancillary?(): string
     /**
@@ -1925,7 +2092,7 @@ type Callback = {
 }
 
 type ConstString2Number = { 
-    [id: string]: number; 
+    [id: string]: number 
 }
 
 type ConstString2String = {
