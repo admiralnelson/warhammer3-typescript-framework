@@ -627,6 +627,14 @@ namespace ProjectName {
             cm.force_remove_ancillary(this.GetInternalInterface(), anciliaryKey, putItBackToPool, supressEventFeed)
         }
 
+        /**
+         * Add experience to this character
+         * @param howManyXp how many experience to add
+         */
+        public AddXp(howManyXp: number) {
+            cm.add_agent_experience(cm.char_lookup_str(this.GetInternalInterface()), howManyXp, false)
+        }
+
         /** returns the agentsubtype key of this object */
         public toString(): string {
             if(!this.IsValid()) return ""

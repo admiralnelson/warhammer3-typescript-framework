@@ -1717,6 +1717,14 @@ This function can also reposition the camera, so it's best used on game creation
      * @param province 
      */
     get_owner_of_province(province: IProvinceScript): IFactionScript | null
+
+    /**
+     * Add experience to the agent
+     * @param characterCqiString use `cm.char_lookup_str` to get the string
+     * @param experience Experience to add.
+     * @param byLevel optional, default value=false If set to true, the level/rank can be supplied instead of an exact amount of experience which is looked up from a table in the campaign manager
+     */
+    add_agent_experience(characterCqiString: string, experience: number, byLevel?: boolean): void
 }
 
 /** context of the callback or conditional checks, get your faction, char, etc. from here */
