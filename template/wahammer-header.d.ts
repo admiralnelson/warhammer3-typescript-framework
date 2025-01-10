@@ -2049,6 +2049,16 @@ interface IContext {
      */
     item_variant_key?(): string
 
+     /**
+     *   This function is available for this following events:  
+     * 
+     *  - CharacterArmoryItemUnlocked
+     *  - CharacterArmoryItemUnequipped
+     *  - CharacterArmoryItemEvent
+     *  - CharacterArmoryItemEquipped
+     */
+     armory_item?(): string
+     
     /**
      *   This function is available for this following events:  
      * 
